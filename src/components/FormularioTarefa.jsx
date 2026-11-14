@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 
+
 function FormularioTarefa() {
 
     // ESTADOS
@@ -9,6 +10,8 @@ function FormularioTarefa() {
     const [textoEdicao, setTextoEdicao] = useState("");
     const [filtro, setFiltro] = useState("todas");
     const [busca, setBusca] = useState("");
+    const [ordenacao, setOrdenacao] = useState("az");
+    
 
     // RECUPERAR TAREFAS DO LOCALSTORAGE
     const [tarefas, setTarefas] = useState(() => {
@@ -62,6 +65,26 @@ function FormularioTarefa() {
         return correspondeBusca && correspondeFiltro;
     });
 
+        const tarefasOrdenadas = [...tarefasFiltradas].sort((a, b) => {
+
+    if (ordenacao === "az") {
+        return a.nome.localeCompare(b.nome);
+    }
+
+    if (ordenacao === "za") {
+        return b.nome.localeCompare(a.nome);
+    }
+
+    if (ordenacao === "pendentes") {
+        return Number(a.concluida) - Number(b.concluida);
+    }
+
+    if (ordenacao === "concluidas") {
+        return Number(b.concluida) - Number(a.concluida);
+    }
+
+    return 0;
+});
     // CADASTRAR TAREFA
     function cadastrarTarefa() {
 
@@ -241,10 +264,24 @@ function FormularioTarefa() {
 
                 </div>
 
+                <div className="ordenacao">
+    <label>Ordenar por:</label>
+
+    <select
+        value={ordenacao}
+        onChange={(e) => setOrdenacao(e.target.value)}
+    >
+        <option value="az">Nome (A-Z)</option>
+        <option value="za">Nome (Z-A)</option>
+        <option value="pendentes">Pendentes primeiro</option>
+        <option value="concluidas">Concluídas primeiro</option>
+    </select>
+</div>
+
                 {/* LISTA DE TAREFAS */}
                 <ul className="lista-tarefas">
 
-                    {tarefasFiltradas.map((tarefa) => (
+                    {tarefasOrdenadas.map((tarefa) => (
 
                         <li
                             key={tarefa.id}

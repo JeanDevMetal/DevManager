@@ -159,3 +159,26 @@ body {
     box-sizing: border-box;
     padding: 12px;
 }
+
+
+.ordenacao {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.ordenacao label {
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+.ordenacao select {
+    background-color: #334155;
+    color: #ffffff;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
