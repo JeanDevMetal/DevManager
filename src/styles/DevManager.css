@@ -1,0 +1,161 @@
+body {
+    background-color: #141820;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.formulario-tarefa {
+    background-color: #232a38;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.formulario-tarefa input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #555;
+    background-color: #141820;
+    color: white;
+}
+
+.formulario-tarefa button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    background-color: #6366f1;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+}
+
+.formulario-tarefa button:hover {
+    background-color: #4f46e5;
+}
+
+.linha-formulario {
+    display: flex;
+    gap: 10px;
+}
+
+.linha-formulario input {
+    flex: 1;
+    min-width: 0;
+}
+
+.lista-tarefas {
+    list-style: none;
+    padding: 0;
+     width: 100%;
+    box-sizing: border-box;
+     
+}
+
+.item-tarefa {
+   display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #334155;
+    border-radius: 8px;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.acoes-tarefa {
+    display: flex;
+    gap: 8px;
+}
+
+.grid-estatisticas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.card-estatistica {
+    background-color: #334155;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.card-estatistica h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.card-estatistica p {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 10px 0 0;
+}
+@media (max-width: 600px) {
+    .linha-formulario {
+        flex-direction: column;
+    }
+
+    .linha-formulario input,
+    .linha-formulario button {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+.formulario-tarefa .btn-cadastrar {
+    background-color: #6366f1;
+}
+
+.formulario-tarefa .btn-concluir {
+    background-color: #16a34a;
+}
+
+.formulario-tarefa .btn-excluir {
+    background-color: #dc2626;
+}
+
+.formulario-tarefa .btn-cadastrar:hover {
+    background-color: #4f46e5;
+}
+
+.formulario-tarefa .btn-concluir:hover {
+    background-color: #15803d;
+}
+
+.formulario-tarefa .btn-excluir:hover {
+    background-color: #b91c1c;
+}
+
+.formulario-tarefa .btn-desmarcar {
+    background-color: #64748b;
+}
+
+.formulario-tarefa .btn-desmarcar:hover {
+    background-color: #475569;
+}
+
+.formulario-tarefa .btn-editar {
+    background-color: #0284c7;
+}
+
+.formulario-tarefa .btn-editar:hover {
+    background-color: #0369a1;
+}
+
+.campo-busca {
+    margin: 15px 0 20px;
+}
+
+.campo-busca input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+}
