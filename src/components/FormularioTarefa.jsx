@@ -12,6 +12,7 @@ function FormularioTarefa() {
     const [busca, setBusca] = useState("");
     const [ordenacao, setOrdenacao] = useState("az");
     const [prioridade, setPrioridade] = useState("media");
+    const [prioridadeEdicao, setPrioridadeEdicao] = useState("media");
     
 
     // RECUPERAR TAREFAS DO LOCALSTORAGE
@@ -66,6 +67,11 @@ function FormularioTarefa() {
         return correspondeBusca && correspondeFiltro;
     });
 
+        const pesosPrioridade = {
+        baixa: 1,
+        media: 2,
+        alta: 3
+};
         const tarefasOrdenadas = [...tarefasFiltradas].sort((a, b) => {
 
     if (ordenacao === "az") {
@@ -83,7 +89,10 @@ function FormularioTarefa() {
     if (ordenacao === "concluidas") {
         return Number(b.concluida) - Number(a.concluida);
     }
-
+    if (ordenacao === "prioridade") {
+    return pesosPrioridade[b.prioridade || "media"]
+         - pesosPrioridade[a.prioridade || "media"];
+}
     return 0;
 });
     // CADASTRAR TAREFA
@@ -120,31 +129,32 @@ function FormularioTarefa() {
     }
 
     // ATUALIZAR NOME DA TAREFA
-    function editarTarefa(idTarefa, novoNome) {
+   function editarTarefa(idTarefa, novoNome, novaPrioridade) {
 
-        if (novoNome.trim() === "") {
-            alert("O nome da tarefa não pode ficar vazio!");
-            return;
-        }
-
-        setTarefas(anterior =>
-            anterior.map(tarefa =>
-                tarefa.id === idTarefa
-                    ? {
-                        ...tarefa,
-                        nome: novoNome.trim()
-                    }
-                    : tarefa
-            )
-        );
+    if (novoNome.trim() === "") {
+        alert("O nome da tarefa não pode ficar vazio!");
+        return;
     }
+
+    setTarefas(anterior =>
+        anterior.map(tarefa =>
+            tarefa.id === idTarefa
+                ? {
+                    ...tarefa,
+                    nome: novoNome.trim(),
+                    prioridade: novaPrioridade
+                }
+                : tarefa
+        )
+    );
+}
 
     // INICIAR EDIÇÃO
-    function iniciarEdicao(tarefa) {
-        setIdEmEdicao(tarefa.id);
-        setTextoEdicao(tarefa.nome);
-        
-    }
+   function iniciarEdicao(tarefa) {
+    setIdEmEdicao(tarefa.id);
+    setTextoEdicao(tarefa.nome);
+    setPrioridadeEdicao(tarefa.prioridade || "media");
+}
 
     
 
@@ -156,7 +166,7 @@ function FormularioTarefa() {
             return;
         }
 
-        editarTarefa(idEmEdicao, textoEdicao);
+        editarTarefa(idEmEdicao, textoEdicao, prioridadeEdicao);
 
         setIdEmEdicao(null);
         setTextoEdicao("");
@@ -288,6 +298,7 @@ function FormularioTarefa() {
         <option value="za">Nome (Z-A)</option>
         <option value="pendentes">Pendentes primeiro</option>
         <option value="concluidas">Concluídas primeiro</option>
+        <option value="prioridade">Maior prioridade</option>
     </select>
 </div>
 
@@ -304,15 +315,27 @@ function FormularioTarefa() {
                             {/* NOME OU CAMPO DE EDIÇÃO */}
                             {idEmEdicao === tarefa.id ? (
 
-                                <input
-                                    type="text"
-                                    value={textoEdicao}
-                                    onChange={(evento) =>
-                                        setTextoEdicao(evento.target.value)
-                                    }
-                                />
+                              <>    <input
+            type="text"
+            value={textoEdicao}
+            onChange={(evento) =>
+                setTextoEdicao(evento.target.value)
+            }
+        />
 
-                          ) : (
+        <select
+            className="seletor-prioridade"
+            value={prioridadeEdicao}
+            onChange={(e) =>
+                setPrioridadeEdicao(e.target.value)
+            }
+        >
+            <option value="baixa">Baixa</option>
+            <option value="media">Média</option>
+            <option value="alta">Alta</option>
+        </select>
+    </>
+) : (
     <>
         <span
             style={{
