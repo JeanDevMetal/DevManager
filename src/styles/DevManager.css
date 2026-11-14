@@ -59,20 +59,21 @@ body {
 }
 
 .item-tarefa {
-   display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 65px auto;
     align-items: center;
     padding: 15px;
     margin-bottom: 10px;
     background-color: #334155;
     border-radius: 8px;
-    gap: 10px;
+    gap: 15px;
     box-sizing: border-box;
 }
 
 .acoes-tarefa {
     display: flex;
     gap: 8px;
+    justify-content: flex-end;
 }
 
 .grid-estatisticas {
@@ -181,4 +182,72 @@ body {
     padding: 10px;
     cursor: pointer;
     transition: border-color 0.2s;
+}
+.prioridade {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    width: 65px;
+    text-align: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.prioridade.alta {
+    background-color: #7f1d1d;
+    color: #fca5a5;
+}
+
+.prioridade.media {
+    background-color: #713f12;
+    color: #fde047;
+}
+
+.prioridade.baixa {
+    background-color: #14532d;
+    color: #86efac;
+}
+
+.seletor-prioridade {
+    background-color: #334155;
+    color: #ffffff;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.seletor-prioridade:hover {
+    border-color: #38bdf8;
+}
+
+.seletor-prioridade:focus {
+    outline: none;
+    border-color: #38bdf8;
+}
+
+@media (max-width: 600px) {
+    .item-tarefa {
+        grid-template-columns: minmax(0, 1fr) 65px;
+    }
+
+    .acoes-tarefa {
+        grid-column: 1 / -1;
+        flex-wrap: wrap;
+    }
+}
+
+.formulario-tarefa .btn-concluir,
+.formulario-tarefa .btn-desmarcar {
+    width: 100px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.item-tarefa > span:not(.prioridade) {
+    text-align: left;
+    overflow-wrap: anywhere;
 }

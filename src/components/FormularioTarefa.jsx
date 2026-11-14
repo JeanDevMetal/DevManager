@@ -11,6 +11,7 @@ function FormularioTarefa() {
     const [filtro, setFiltro] = useState("todas");
     const [busca, setBusca] = useState("");
     const [ordenacao, setOrdenacao] = useState("az");
+    const [prioridade, setPrioridade] = useState("media");
     
 
     // RECUPERAR TAREFAS DO LOCALSTORAGE
@@ -96,7 +97,8 @@ function FormularioTarefa() {
         const novaTarefa = {
             id: crypto.randomUUID(),
             nome: nomeTarefa.trim(),
-            concluida: false
+            concluida: false,
+            prioridade: prioridade
         };
 
         setTarefas(anterior => [
@@ -141,7 +143,10 @@ function FormularioTarefa() {
     function iniciarEdicao(tarefa) {
         setIdEmEdicao(tarefa.id);
         setTextoEdicao(tarefa.nome);
+        
     }
+
+    
 
     // SALVAR EDIÇÃO
     function salvarEdicao() {
@@ -215,7 +220,15 @@ function FormularioTarefa() {
                             setNomeTarefa(evento.target.value)
                         }
                     />
-
+                    <select
+    className="seletor-prioridade"
+    value={prioridade}
+    onChange={(e) => setPrioridade(e.target.value)}
+>
+    <option value="baixa">Baixa</option>
+    <option value="media">Média</option>
+    <option value="alta">Alta</option>
+</select>
                     <button
                         className="btn-cadastrar"
                         onClick={cadastrarTarefa}
@@ -299,19 +312,23 @@ function FormularioTarefa() {
                                     }
                                 />
 
-                            ) : (
+                          ) : (
+    <>
+        <span
+            style={{
+                textDecoration: tarefa.concluida
+                    ? "line-through"
+                    : "none"
+            }}
+        >
+            {tarefa.nome}
+        </span>
 
-                                <span
-                                    style={{
-                                        textDecoration: tarefa.concluida
-                                            ? "line-through"
-                                            : "none"
-                                    }}
-                                >
-                                    {tarefa.nome}
-                                </span>
-
-                            )}
+        <span className={`prioridade ${tarefa.prioridade || "media"}`}>
+            {tarefa.prioridade || "media"}
+        </span>
+    </>
+)}
 
                             {/* BOTÕES DE AÇÃO */}
                             <div className="acoes-tarefa">
