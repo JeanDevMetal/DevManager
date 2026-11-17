@@ -60,7 +60,7 @@ body {
 
 .item-tarefa {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 65px auto;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: center;
     padding: 15px;
     margin-bottom: 10px;
@@ -78,7 +78,7 @@ body {
 
 .grid-estatisticas {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns:  repeat(4, minmax(0, 1fr));
     gap: 15px;
 }
 
@@ -250,4 +250,63 @@ body {
 .item-tarefa > span:not(.prioridade) {
     text-align: left;
     overflow-wrap: anywhere;
+}
+
+.data-vencimento {
+    display: block;
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 5px;
+}
+
+.status-vencimento {
+    font-weight: bold;
+}
+
+.status-vencimento.atrasada {
+    color: #f87171;
+}
+
+.status-vencimento.vence-hoje {
+    color: #facc15;
+}
+
+.status-vencimento.no-prazo {
+    color: #4ade80;
+}
+
+.status-vencimento.concluída {
+    color: #94a3b8;
+}
+
+.card-atrasadas p {
+    color: #f87171;
+}
+
+@media (max-width: 600px) {
+    .grid-estatisticas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.item-tarefa.modo-edicao {
+    grid-template-columns: minmax(0, 1fr) 90px 150px;
+}
+
+.modo-edicao .acoes-tarefa {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+}
+
+.modo-edicao input,
+.modo-edicao select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+    .item-tarefa.modo-edicao {
+        grid-template-columns: 1fr;
+    }
 }

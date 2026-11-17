@@ -13,6 +13,8 @@ function FormularioTarefa() {
     const [ordenacao, setOrdenacao] = useState("az");
     const [prioridade, setPrioridade] = useState("media");
     const [prioridadeEdicao, setPrioridadeEdicao] = useState("media");
+    const [dataVencimento, setDataVencimento] = useState("");
+    const [vencimentoEdicao, setVencimentoEdicao] = useState("");
     
 
     // RECUPERAR TAREFAS DO LOCALSTORAGE
@@ -41,6 +43,33 @@ function FormularioTarefa() {
         );
     }, [tarefas]);
 
+    const agora = new Date();
+
+    const hoje = agora.getFullYear() + "-" +
+    String(agora.getMonth() + 1).padStart(2, "0") + "-" +
+    String(agora.getDate()).padStart(2, "0");
+
+    function obterStatusVencimento(tarefa) {
+
+    if (!tarefa.vencimento) {
+        return "";
+    }
+
+    if (tarefa.concluida) {
+        return "Concluída";
+    }
+
+    if (tarefa.vencimento < hoje) {
+        return "Atrasada";
+    }
+
+    if (tarefa.vencimento === hoje) {
+        return "Vence hoje";
+    }
+
+    return "No prazo";
+}
+
     // ESTATÍSTICAS
     const totalTarefas = tarefas.length;
 
@@ -51,6 +80,10 @@ function FormularioTarefa() {
     const tarefasPendentes = tarefas.filter(
         tarefa => tarefa.concluida === false
     ).length;
+
+     const tarefasAtrasadas = tarefas.filter(
+    tarefa => obterStatusVencimento(tarefa) === "Atrasada"
+).length;
 
     // FILTRAR TAREFAS POR STATUS E PESQUISA
     const tarefasFiltradas = tarefas.filter(tarefa => {
@@ -93,6 +126,11 @@ function FormularioTarefa() {
     return pesosPrioridade[b.prioridade || "media"]
          - pesosPrioridade[a.prioridade || "media"];
 }
+
+if (ordenacao === "vencimento") {
+    return (a.vencimento || "9999-12-31")
+        .localeCompare(b.vencimento || "9999-12-31");
+}
     return 0;
 });
     // CADASTRAR TAREFA
@@ -107,7 +145,8 @@ function FormularioTarefa() {
             id: crypto.randomUUID(),
             nome: nomeTarefa.trim(),
             concluida: false,
-            prioridade: prioridade
+            prioridade: prioridade,
+            vencimento: dataVencimento
         };
 
         setTarefas(anterior => [
@@ -116,6 +155,7 @@ function FormularioTarefa() {
         ]);
 
         setNomeTarefa("");
+        setDataVencimento("");
     }
 
     // EXCLUIR TAREFA
@@ -129,7 +169,7 @@ function FormularioTarefa() {
     }
 
     // ATUALIZAR NOME DA TAREFA
-   function editarTarefa(idTarefa, novoNome, novaPrioridade) {
+ function editarTarefa(idTarefa, novoNome, novaPrioridade, novoVencimento) {
 
     if (novoNome.trim() === "") {
         alert("O nome da tarefa não pode ficar vazio!");
@@ -142,7 +182,8 @@ function FormularioTarefa() {
                 ? {
                     ...tarefa,
                     nome: novoNome.trim(),
-                    prioridade: novaPrioridade
+                    prioridade: novaPrioridade,
+                    vencimento: novoVencimento
                 }
                 : tarefa
         )
@@ -150,12 +191,12 @@ function FormularioTarefa() {
 }
 
     // INICIAR EDIÇÃO
-   function iniciarEdicao(tarefa) {
+ function iniciarEdicao(tarefa) {
     setIdEmEdicao(tarefa.id);
     setTextoEdicao(tarefa.nome);
     setPrioridadeEdicao(tarefa.prioridade || "media");
+    setVencimentoEdicao(tarefa.vencimento || "");
 }
-
     
 
     // SALVAR EDIÇÃO
@@ -166,7 +207,12 @@ function FormularioTarefa() {
             return;
         }
 
-        editarTarefa(idEmEdicao, textoEdicao, prioridadeEdicao);
+        editarTarefa(
+    idEmEdicao,
+    textoEdicao,
+    prioridadeEdicao,
+    vencimentoEdicao
+);
 
         setIdEmEdicao(null);
         setTextoEdicao("");
@@ -216,6 +262,11 @@ function FormularioTarefa() {
                         <p>{tarefasPendentes}</p>
                     </div>
 
+                    <div className="card-estatistica card-atrasadas">
+    <h3>Atrasadas</h3>
+    <p>{tarefasAtrasadas}</p>
+</div>
+
                 </div>
 
                 <h2>Cadastrar nova tarefa</h2>
@@ -239,6 +290,12 @@ function FormularioTarefa() {
     <option value="media">Média</option>
     <option value="alta">Alta</option>
 </select>
+
+                        <input
+                         type="date"
+                        value={dataVencimento}
+                        onChange={(e) => setDataVencimento(e.target.value)}
+/>
                     <button
                         className="btn-cadastrar"
                         onClick={cadastrarTarefa}
@@ -299,6 +356,7 @@ function FormularioTarefa() {
         <option value="pendentes">Pendentes primeiro</option>
         <option value="concluidas">Concluídas primeiro</option>
         <option value="prioridade">Maior prioridade</option>
+        <option value="vencimento">Data de vencimento</option>
     </select>
 </div>
 
@@ -308,9 +366,11 @@ function FormularioTarefa() {
                     {tarefasOrdenadas.map((tarefa) => (
 
                         <li
-                            key={tarefa.id}
-                            className="item-tarefa"
-                        >
+                    key={tarefa.id}
+                className={`item-tarefa ${
+                idEmEdicao === tarefa.id ? "modo-edicao" : ""
+                }`}
+>
 
                             {/* NOME OU CAMPO DE EDIÇÃO */}
                             {idEmEdicao === tarefa.id ? (
@@ -334,8 +394,16 @@ function FormularioTarefa() {
             <option value="media">Média</option>
             <option value="alta">Alta</option>
         </select>
+         <input
+    type="date"
+    className="vencimento-edicao"
+    value={vencimentoEdicao}
+    onChange={(e) => setVencimentoEdicao(e.target.value)}
+/>
     </>
 ) : (
+
+    
     <>
         <span
             style={{
@@ -345,6 +413,20 @@ function FormularioTarefa() {
             }}
         >
             {tarefa.nome}
+
+            {tarefa.vencimento && (
+    <small className="data-vencimento">
+    Vencimento: {tarefa.vencimento.split("-").reverse().join("/")}
+    {" - "}
+
+    <span className={
+    "status-vencimento " +
+    obterStatusVencimento(tarefa).toLowerCase().replaceAll(" ", "-")
+}>
+    {obterStatusVencimento(tarefa)}
+</span>
+</small>
+)}
         </span>
 
         <span className={`prioridade ${tarefa.prioridade || "media"}`}>
