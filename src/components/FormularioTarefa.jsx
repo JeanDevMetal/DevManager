@@ -1,8 +1,10 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { obterStatusVencimento } from "../utils/vencimento";
 
 
-function FormularioTarefa() {
+
+function FormularioTarefa({ tarefas, setTarefas }) {
 
     // ESTADOS
     const [nomeTarefa, setNomeTarefa] = useState("");
@@ -17,58 +19,9 @@ function FormularioTarefa() {
     const [vencimentoEdicao, setVencimentoEdicao] = useState("");
     
 
-    // RECUPERAR TAREFAS DO LOCALSTORAGE
-    const [tarefas, setTarefas] = useState(() => {
-        try {
-            const tarefasSalvas = localStorage.getItem("tarefas");
+    
 
-            if (tarefasSalvas) {
-                const dados = JSON.parse(tarefasSalvas);
-                return Array.isArray(dados) ? dados : [];
-            }
 
-            return [];
-
-        } catch (erro) {
-            console.error("Erro ao recuperar tarefas:", erro);
-            return [];
-        }
-    });
-
-    // SALVAR TAREFAS AUTOMATICAMENTE
-    useEffect(() => {
-        localStorage.setItem(
-            "tarefas",
-            JSON.stringify(tarefas)
-        );
-    }, [tarefas]);
-
-    const agora = new Date();
-
-    const hoje = agora.getFullYear() + "-" +
-    String(agora.getMonth() + 1).padStart(2, "0") + "-" +
-    String(agora.getDate()).padStart(2, "0");
-
-    function obterStatusVencimento(tarefa) {
-
-    if (!tarefa.vencimento) {
-        return "";
-    }
-
-    if (tarefa.concluida) {
-        return "Concluída";
-    }
-
-    if (tarefa.vencimento < hoje) {
-        return "Atrasada";
-    }
-
-    if (tarefa.vencimento === hoje) {
-        return "Vence hoje";
-    }
-
-    return "No prazo";
-}
 
     // ESTATÍSTICAS
     const totalTarefas = tarefas.length;
