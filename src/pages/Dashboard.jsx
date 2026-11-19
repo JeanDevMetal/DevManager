@@ -1,19 +1,15 @@
 
 import { obterStatusVencimento } from "../utils/vencimento";
+import CardEstatistica from "../components/CardEstatistica";
+import PainelProgresso from "../components/PainelProgresso";
+import GraficoSituacao from "../components/GraficoSituacao";
+import GraficoPrioridade from "../components/GraficoPrioridade";
+import GraficoVencimento from "../components/GraficoVencimento";
+import ProximosVencimentos from "../components/ProximosVencimentos";
+import DashboardVazio from "../components/DashboardVazio";
 
-import {
-    PieChart,
-    Pie,
-    Cell,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid
-} from "recharts";
+
+ 
 
 function Dashboard({ tarefas }) {
 
@@ -124,26 +120,7 @@ function Dashboard({ tarefas }) {
         .slice(0, 5);
 
         if (totalTarefas === 0) {
-    return (
-        <div className="dashboard">
-
-            <h1>Dashboard</h1>
-
-            <div className="dashboard-vazio">
-
-                <span className="icone-vazio">📋</span>
-
-                <h2>Nenhuma tarefa cadastrada</h2>
-
-                <p>
-                    Comece cadastrando sua primeira tarefa
-                    para acompanhar seu progresso.
-                </p>
-
-            </div>
-
-        </div>
-    );
+    return <DashboardVazio />;
 }
     return (
         <div className="dashboard">
@@ -152,291 +129,73 @@ function Dashboard({ tarefas }) {
 
             <p>Bem-vindo ao DevManager!</p>
 
-            {/* CARTÕES DE ESTATÍSTICAS */}
-            <div className="grid-estatisticas">
+           {/* CARTÕES DE ESTATÍSTICAS */}
+<div className="grid-estatisticas">
 
-                <div className="card-estatistica">
-                    <h3>Total de tarefas</h3>
-                    <p>{totalTarefas}</p>
-                </div>
+    <CardEstatistica
+        titulo="Total de tarefas"
+        valor={totalTarefas}
+    />
 
-                <div className="card-estatistica">
-                    <h3>Concluídas</h3>
-                    <p>{tarefasConcluidas}</p>
-                </div>
+    <CardEstatistica
+        titulo="Concluídas"
+        valor={tarefasConcluidas}
+    />
 
-                <div className="card-estatistica">
-                    <h3>Pendentes</h3>
-                    <p>{tarefasPendentes}</p>
-                </div>
+    <CardEstatistica
+        titulo="Pendentes"
+        valor={tarefasPendentes}
+    />
 
-                <div className="card-estatistica card-atrasadas">
-                    <h3>Atrasadas</h3>
-                    <p>{tarefasAtrasadas}</p>
-                </div>
+    <CardEstatistica
+        titulo="Atrasadas"
+        valor={tarefasAtrasadas}
+        classe="card-atrasadas"
+    />
 
-                <div className="card-estatistica">
-                    <h3>Progresso</h3>
-                    <p>{progresso}%</p>
-                </div>
+    <CardEstatistica
+        titulo="Progresso"
+        valor={`${progresso}%`}
+    />
 
-            </div>
+</div>
 
             {/* PAINEL DE PROGRESSO */}
-            <div className="painel-progresso">
-
-                <h2>Progresso geral</h2>
-
-                <div className="barra-progresso">
-
-                    <div
-                        className="progresso-preenchimento"
-                        style={{ width: `${progresso}%` }}
-                    />
-
-                </div>
-
-                <p>
-                    {tarefasConcluidas} de {totalTarefas} tarefas concluídas
-                    ({progresso}%)
-                </p>
-
-            </div>
-
+<PainelProgresso
+    concluidas={tarefasConcluidas}
+    total={totalTarefas}
+    progresso={progresso}
+/>
             {/* INÍCIO DO GRID DE DOIS GRÁFICOS */}
-            <div className="grid-graficos">
+<div className="grid-graficos">
 
-                {/* GRÁFICO DE SITUAÇÃO */}
-                <div className="painel-grafico">
+    <GraficoSituacao
+        dados={dadosSituacao}
+        cores={coresSituacao}
+    />
 
-                    <h2>Situação das tarefas</h2>
+    <GraficoPrioridade
+        dados={dadosPrioridade}
+        cores={coresPrioridade}
+    />
 
-                    <ResponsiveContainer width="100%" height={300}>
-
-                        <PieChart>
-
-                            <Pie
-                                data={dadosSituacao}
-                                dataKey="value"
-                                nameKey="name"
-                                innerRadius={65}
-                                outerRadius={100}
-                                paddingAngle={3}
-                                stroke="none"
-                            >
-
-                                {dadosSituacao.map((item, index) => (
-                                    <Cell
-                                        key={item.name}
-                                        fill={coresSituacao[index]}
-                                    />
-                                ))}
-
-                            </Pie>
-
-                            <Tooltip
-                                contentStyle={{
-                                    backgroundColor: "#0f172a",
-                                    border: "1px solid #475569",
-                                    borderRadius: "8px"
-                                }}
-                                labelStyle={{ color: "#38bdf8" }}
-                                itemStyle={{ color: "#f8fafc" }}
-                                cursor={{
-                                    fill: "rgba(148, 163, 184, 0.08)"
-                                }}
-                            />
-
-                            <Legend />
-
-                        </PieChart>
-
-                    </ResponsiveContainer>
-
-                </div>
-
-                {/* GRÁFICO DE PRIORIDADES */}
-                <div className="painel-grafico">
-
-                    <h2>Tarefas por prioridade</h2>
-
-                    <ResponsiveContainer width="100%" height={300}>
-
-                        <BarChart data={dadosPrioridade}>
-
-                            <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="#475569"
-                            />
-
-                            <XAxis
-                                dataKey="name"
-                                stroke="#94a3b8"
-                            />
-
-                            <YAxis
-                                stroke="#94a3b8"
-                                allowDecimals={false}
-                            />
-
-                            <Tooltip
-                                contentStyle={{
-                                    backgroundColor: "#0f172a",
-                                    border: "1px solid #475569",
-                                    borderRadius: "8px"
-                                }}
-                                labelStyle={{ color: "#38bdf8" }}
-                                itemStyle={{ color: "#f8fafc" }}
-                                cursor={{
-                                    fill: "rgba(148, 163, 184, 0.08)"
-                                }}
-                            />
-
-                            <Bar
-                                dataKey="value"
-                                name="Tarefas"
-                                radius={[6, 6, 0, 0]}
-                                maxBarSize={80}
-                            >
-
-                                {dadosPrioridade.map((item, index) => (
-                                    <Cell
-                                        key={item.name}
-                                        fill={coresPrioridade[index]}
-                                    />
-                                ))}
-
-                            </Bar>
-
-                        </BarChart>
-
-                    </ResponsiveContainer>
-
-                </div>
-
-            </div>
+</div>
+{/* FIM DO GRID DE DOIS GRÁFICOS */}
             {/* FIM DO GRID DE DOIS GRÁFICOS */}
 
 
-            {/* GRÁFICO DE DISTRIBUIÇÃO POR VENCIMENTO */}
-            <div className="painel-grafico">
-
-                <h2>Distribuição por vencimento</h2>
-
-                <ResponsiveContainer width="100%" height={300}>
-
-                    <BarChart
-                        data={dadosVencimento}
-                        layout="vertical"
-                    >
-
-                        <CartesianGrid
-                            strokeDasharray="3 3"
-                            stroke="#475569"
-                        />
-
-                        <XAxis
-                            type="number"
-                            allowDecimals={false}
-                            stroke="#94a3b8"
-                        />
-
-                        <YAxis
-                            type="category"
-                            dataKey="name"
-                            width={100}
-                            stroke="#94a3b8"
-                        />
-
-                        <Tooltip
-                            contentStyle={{
-                                backgroundColor: "#0f172a",
-                                border: "1px solid #475569",
-                                borderRadius: "8px"
-                            }}
-                            labelStyle={{ color: "#38bdf8" }}
-                            itemStyle={{ color: "#f8fafc" }}
-                            cursor={{
-                                fill: "rgba(148, 163, 184, 0.08)"
-                            }}
-                        />
-
-                        <Bar
-                            dataKey="value"
-                            name="Tarefas"
-                            radius={[0, 6, 6, 0]}
-                            maxBarSize={35}
-                        >
-
-                            {dadosVencimento.map((item, index) => (
-                                <Cell
-                                    key={item.name}
-                                    fill={coresVencimento[index]}
-                                />
-                            ))}
-
-                        </Bar>
-
-                    </BarChart>
-
-                </ResponsiveContainer>
-
-            </div>
-
+          
+           {/* GRÁFICO DE DISTRIBUIÇÃO POR VENCIMENTO */}
+<GraficoVencimento
+    dados={dadosVencimento}
+    cores={coresVencimento}
+/>
 
             {/* PAINEL DE PRÓXIMOS VENCIMENTOS */}
-            <div className="painel-grafico">
-
-                <h2>Próximos vencimentos</h2>
-
-                {proximosVencimentos.length === 0 ? (
-
-                    <p className="mensagem-vazia">
-                        Nenhuma tarefa pendente com vencimento.
-                    </p>
-
-                ) : (
-
-                    <ul className="lista-vencimentos">
-
-                        {proximosVencimentos.map(tarefa => (
-
-                            <li
-                                key={tarefa.id}
-                                className="item-vencimento"
-                            >
-
-                                <div>
-                                    <strong>{tarefa.nome}</strong>
-
-                                    <small className="data-vencimento">
-                                        {tarefa.vencimento
-                                            .split("-")
-                                            .reverse()
-                                            .join("/")}
-                                    </small>
-                                </div>
-
-                                <span className={
-                                    "status-vencimento " +
-                                    obterStatusVencimento(tarefa)
-                                        .toLowerCase()
-                                        .replaceAll(" ", "-")
-                                }>
-                                    {obterStatusVencimento(tarefa)}
-                                </span>
-
-                            </li>
-
-                        ))}
-
-                    </ul>
-
-                )}
-
-            </div>
-
-        </div>
+               <ProximosVencimentos
+                tarefas={proximosVencimentos}
+            />
+             </div>
     );
 }
 
