@@ -1,39 +1,16 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
+ 
 
 import Dashboard from "./pages/Dashboard";
 import Tarefas from "./pages/Tarefas";
 import Sidebar from "./components/Sidebar";
 
 import "./styles/DevManager.css";
+ 
 
 function App() {
 
-    // RECUPERAR TAREFAS DO LOCALSTORAGE
-    const [tarefas, setTarefas] = useState(() => {
-        try {
-            const tarefasSalvas = localStorage.getItem("tarefas");
-
-            if (tarefasSalvas) {
-                const dados = JSON.parse(tarefasSalvas);
-                return Array.isArray(dados) ? dados : [];
-            }
-
-            return [];
-
-        } catch (erro) {
-            console.error("Erro ao recuperar tarefas:", erro);
-            return [];
-        }
-    });
-
-    // SALVAR TAREFAS AUTOMATICAMENTE
-    useEffect(() => {
-        localStorage.setItem(
-            "tarefas",
-            JSON.stringify(tarefas)
-        );
-    }, [tarefas]);
+    
 
     return (
         <HashRouter>
@@ -45,18 +22,13 @@ function App() {
                     <Routes>
 
                        <Route
-                        path="/"
-                            element={<Dashboard tarefas={tarefas} />}
+    path="/"
+    element={<Dashboard />}
 />
-                        <Route
-                            path="/tarefas"
-                            element={
-                                <Tarefas
-                                    tarefas={tarefas}
-                                    setTarefas={setTarefas}
-                                />
-                            }
-                        />
+                    <Route
+    path="/tarefas"
+    element={<Tarefas />}
+/>
 
                     </Routes>
                 </main>

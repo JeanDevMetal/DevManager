@@ -7,11 +7,14 @@ import GraficoPrioridade from "../components/GraficoPrioridade";
 import GraficoVencimento from "../components/GraficoVencimento";
 import ProximosVencimentos from "../components/ProximosVencimentos";
 import DashboardVazio from "../components/DashboardVazio";
+import useTarefas from "../hooks/useTarefas";
 
 
  
 
-function Dashboard({ tarefas }) {
+function Dashboard() {
+
+    const { tarefas } = useTarefas();
 
     // ESTATÍSTICAS
     const totalTarefas = tarefas.length;
